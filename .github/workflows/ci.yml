@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Poetry
+        run: pipx install "poetry>=2,<3"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+          cache: poetry
+
+      - name: Instalar dependências
+        run: poetry install --no-interaction
+
+      - name: Verificar pyproject e lock
+        run: poetry check
+
+      - name: Ruff (lint)
+        run: poetry run ruff check .
+
+      - name: Ruff (formatação)
+        run: poetry run ruff format --check .
+
+      - name: Pytest com cobertura
+        run: poetry run pytest
+
+      - name: Build da documentação
+        run: poetry run mkdocs build --strict
