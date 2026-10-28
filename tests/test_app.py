@@ -43,6 +43,8 @@ def run_app(car_data=None, car_error=None, drivers=DRIVERS, meetings_error=None)
         )
         stack.enter_context(patch("f1.client.get_sessions", return_value=SESSIONS))
         stack.enter_context(patch("f1.client.get_drivers", return_value=drivers))
+        stack.enter_context(patch("f1.client.get_race_sessions", return_value=[]))
+        stack.enter_context(patch("f1.client.get_laps", return_value=[]))
         stack.enter_context(
             patch(
                 "f1.client.get_car_data",
