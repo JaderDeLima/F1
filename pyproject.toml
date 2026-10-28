@@ -1,0 +1,56 @@
+[project]
+name = "f1"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Jader Nogueira",email = "jaderdelima@yahoo.com.br"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "requests (>=2.34.2,<3.0.0)",
+    "streamlit (>=1.66.1,<2.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "f1", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "ruff (>=0.17.3,<0.18.0)",
+    "pytest (>=9.2.0,<10.0.0)",
+    "pytest-cov (>=7.1.0,<8.0.0)",
+    "mkdocs (>=1.6.1,<2.0.0)",
+    "mkdocs-material (>=9.8.0,<10.0.0)",
+    "responses (>=0.26.3,<0.27.0)",
+    "taskipy (>=1.14.1,<2.0.0)"
+]
+
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "--cov=f1 --cov-report=term-missing --cov-fail-under=50"
+
+[tool.coverage.run]
+source = ["src/f1"]
+branch = true
+
+[tool.taskipy.tasks]
+test = "pytest"
+lint = "ruff check . && ruff format --check ."
+format = "ruff check . --fix && ruff format ."
+docs = "mkdocs serve"
+dash = "streamlit run src/f1/app.py"

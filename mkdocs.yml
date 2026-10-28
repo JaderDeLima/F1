@@ -1,0 +1,16 @@
+site_name: F1
+docs_dir: docs
+theme:
+  name: material
+markdown_extensions:
+  - admonition
+  - tables
+nav:
+  - Início: index.md
+  - Arquitetura: arquitetura.md
+  - Instalação: instalacao.md
+  - Uso: uso.md
+  - Dashboard: dashboard.md
+  - Módulos: modulos.md
+  - API OpenF1: api-openf1.md
+  - Desenvolvimento: desenvolvimento.md
