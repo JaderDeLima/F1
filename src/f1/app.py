@@ -1,6 +1,6 @@
 """Dashboard Streamlit: ``poetry run task dash``."""
 
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 
 import pandas as pd
 import streamlit as st
@@ -44,13 +44,13 @@ def load_meetings(year: int) -> list[dict]:
 
 @st.cache_data(ttl=3600)
 def load_sessions(meeting_key: int) -> list[dict]:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     def started(session: dict) -> bool:
         if not session.get("date_start"):
             return True
         start = datetime.fromisoformat(session["date_start"])
-        return start.replace(tzinfo=start.tzinfo or timezone.utc) <= now
+        return start.replace(tzinfo=start.tzinfo or UTC) <= now
 
     return [s for s in get_sessions(meeting_key) if started(s)]
 
@@ -63,12 +63,12 @@ def load_drivers(session_key: int) -> list[dict]:
 @st.cache_data(ttl=3600, show_spinner="Consultando voltas de todas as corridas...")
 def load_season_fastest(year: int) -> list[dict]:
     """Top 5 voltas de cada corrida já realizada do ano, em ordem de calendário."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     races = sorted(get_race_sessions(year), key=lambda s: s.get("date_start", ""))
     rows: list[dict] = []
     for race in races:
         start = datetime.fromisoformat(race["date_start"])
-        if start.replace(tzinfo=start.tzinfo or timezone.utc) > now:
+        if start.replace(tzinfo=start.tzinfo or UTC) > now:
             continue
         top = fastest_laps(
             get_laps(race["session_key"]), get_drivers(race["session_key"])

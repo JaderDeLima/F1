@@ -15,16 +15,16 @@ def fastest_laps(
 ) -> list[dict[str, Any]]:
     """As ``top`` voltas mais rápidas, com o piloto de cada uma."""
     names = {d["driver_number"]: driver_label(d) for d in drivers}
-    timed = [l for l in laps if l.get("lap_duration")]
-    timed.sort(key=lambda l: l["lap_duration"])
+    timed = [lap for lap in laps if lap.get("lap_duration")]
+    timed.sort(key=lambda lap: lap["lap_duration"])
     return [
         {
             "Posição": pos,
-            "Piloto": names.get(l["driver_number"], f"#{l['driver_number']}"),
-            "Volta": l.get("lap_number"),
-            "Tempo": format_lap_time(l["lap_duration"]),
+            "Piloto": names.get(lap["driver_number"], f"#{lap['driver_number']}"),
+            "Volta": lap.get("lap_number"),
+            "Tempo": format_lap_time(lap["lap_duration"]),
         }
-        for pos, l in enumerate(timed[:top], start=1)
+        for pos, lap in enumerate(timed[:top], start=1)
     ]
 
 
